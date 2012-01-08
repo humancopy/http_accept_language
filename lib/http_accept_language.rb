@@ -56,10 +56,14 @@ module HttpAcceptLanguage
   end
 
 end
-if defined?(ActionDispatch::Request)
-  ActionDispatch::Request.send :include, HttpAcceptLanguage
-elsif defined?(ActionDispatch::AbstractRequest)
-  ActionDispatch::AbstractRequest.send :include, HttpAcceptLanguage
-elsif defined?(ActionDispatch::CgiRequest)
-  ActionDispatch::CgiRequest.send :include, HttpAcceptLanguage
+
+# Support both Rails 2.3 and 3
+klass = defined?(ActionDispatch) ? ActionDispatch : ActionController
+
+if defined?(klass::Request)
+  klass::Request.send :include, HttpAcceptLanguage
+elsif defined?(klass::AbstractRequest)
+  klass::AbstractRequest.send :include, HttpAcceptLanguage
+elsif defined?(klass::CgiRequest)
+  klass::CgiRequest.send :include, HttpAcceptLanguage
 end
